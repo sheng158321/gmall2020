@@ -95,18 +95,21 @@ public class CanalClient {
         }
     }
 }
+
 //    public static void main(String[] args) {
-//
+
 //        CanalConnector canalConnector = CanalConnectors.newSingleConnector(new InetSocketAddress("hadoop102", 11111),
 //                "example",
 //                "",
 //                "");
 //
 //        while (true) {
+//
 //            canalConnector.connect();
+//            canalConnector.subscribe("gmall.*");
 //            Message message = canalConnector.get(100);
 //            if (message.getEntries().size() <= 0) {
-//                System.out.println("当前没有数据，请休息一会！！！");
+//                System.out.println("当前没数据，等会重新抓取");
 //                try {
 //                    Thread.sleep(5000);
 //                } catch (InterruptedException e) {
@@ -116,33 +119,12 @@ public class CanalClient {
 //                List<CanalEntry.Entry> entries = message.getEntries();
 //                for (CanalEntry.Entry entry : entries) {
 //                    CanalEntry.EntryType entryType = entry.getEntryType();
-//                    if (CanalEntry.EntryType.ROWDATA.equals(entryType)) {
+//                    if(CanalEntry.EntryType.ROWDATA.equals(entryType)){
 //                        String tableName = entry.getHeader().getTableName();
 //                        ByteString storeValue = entry.getStoreValue();
-//                        try {
-//                            CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(storeValue);
-//                            CanalEntry.EventType eventType = rowChange.getEventType();
-//                            List<CanalEntry.RowData> rowDatasList = rowChange.getRowDatasList();
-//                            handler(tableName, eventType, rowDatasList);
-//                        } catch (InvalidProtocolBufferException e) {
-//                            e.printStackTrace();
-//                        }
+//                        CanalEntry
 //                    }
 //                }
-//            }
-//        }
-//    }
-//
-//    private static void handler(String tableName, CanalEntry.EventType eventType, List<CanalEntry.RowData> rowDatasList) {
-//        if("order_info".equals(tableName) && CanalEntry.EventType.INSERT.equals(eventType)){
-//            for (CanalEntry.RowData rowData : rowDatasList) {
-//                List<CanalEntry.Column> afterColumnsList = rowData.getAfterColumnsList();
-//                JSONObject jsonObject = new JSONObject();
-//                for (CanalEntry.Column column : afterColumnsList) {
-//                    jsonObject.put(column.getName(),column.getValue());
-//                }
-//                System.out.println(jsonObject.toString());
-//                MyKafkaSender.send(GmallConstants.KAFKA_ORDER_INFO,jsonObject.toString());
 //            }
 //        }
 //    }

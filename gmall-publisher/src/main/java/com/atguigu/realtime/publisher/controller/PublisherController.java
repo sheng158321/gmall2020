@@ -24,8 +24,9 @@ public class PublisherController {
         //集合存放结果数据
         ArrayList<Map> result = new ArrayList<>();
 
-        //新增日活
+        //新增日活及交易额
         int dauTotal = publisherService.getDauTotal(date);
+        Double orderAmount = publisherService.getOrderAmount(date);
 
         //封装新增日活
         HashMap<String, Object> dauMap = new HashMap<>();
@@ -39,10 +40,16 @@ public class PublisherController {
         newMidMap.put("name", "新增设备");
         newMidMap.put("value", 233);
 
+        //封装新增设备
+        HashMap<String, Object> gmvMap = new HashMap<>();
+        gmvMap.put("id", "order_amount");
+        gmvMap.put("name", "新增交易额");
+        gmvMap.put("value", orderAmount);
+
         //放入集合
         result.add(dauMap);
         result.add(newMidMap);
-
+        result.add(gmvMap);
 
         return JSONObject.toJSONString(result);
     }
@@ -50,20 +57,33 @@ public class PublisherController {
     @RequestMapping("realtime-hours")
     public String getDauTotalHourMap(@RequestParam("id") String id,
                                      @RequestParam("date") String date) {
-        //获取当天日活分时数据
-        Map todayMap = publisherService.getDauTotalHourMap(date);
-
-        //获取昨天日活分时数据
-        String yesterday = LocalDate.parse(date).plusDays(-1).toString();
-        Map yesterdayMap = publisherService.getDauTotalHourMap(yesterday);
-
-        //存放结果
+        //1.创建Map用于存放结果数据
         HashMap<String, Map> result = new HashMap<>();
 
+        //2.获取昨天的日期
+        String yesterday = LocalDate.parse(date).plusDays(-1).toString();
+
+        //3.声明存放昨天和今天数据的Map
+        Map todayMap = null;
+        Map yesterdayMap = null;
+
+        if ("dau".equals(id)) {
+            //a.获取当天的日活分时数据
+            todayMap = publisherService.getDauTotalHourMap(date);
+            //b.获取昨天的日活分时数据
+            yesterdayMap = publisherService.getDauTotalHourMap(yesterday);
+        } else if ("order_amount".equals(id)) {
+            //a.获取当天的交易额分时数据
+            todayMap = publisherService.getOrderAmountHour(date);
+            //b.获取昨天天的交易额分时数据
+            yesterdayMap = publisherService.getOrderAmountHour(yesterday);
+        }
+
+        //4.将两个Map放入result
         result.put("yesterday", yesterdayMap);
         result.put("today", todayMap);
 
+        //5.返回结果
         return JSONObject.toJSONString(result);
-
     }
 }

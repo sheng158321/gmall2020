@@ -1,5 +1,6 @@
 package com.atguigu.utils;
 
+import javax.lang.model.element.VariableElement;
 import java.util.Date;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ public class RandomDate {
     Long logDateTime = 0L;
     int maxTimeStep = 0;
 
-    public RandomDate(Date startDate, Date endDate, int num) {
+    public  RandomDate(Date startDate, Date endDate, int num) {
         Long avgStepTime = (endDate.getTime() - startDate.getTime()) / num;
         this.maxTimeStep = avgStepTime.intValue() * 2;
         this.logDateTime = startDate.getTime();
@@ -18,4 +19,6 @@ public class RandomDate {
         logDateTime = logDateTime + timeStep;
         return new Date(logDateTime);
     }
+
+
 }
